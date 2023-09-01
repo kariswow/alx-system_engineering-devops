@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Get the parent directory
+parent_directory=$(dirname $(pwd))
+
+# Copy HTML files from the current directory to the parent directory
+for file in *.html; do
+    if [[ -f "$parent_directory/$file" ]]; then
+        current_mtime=$(stat -c %Y "$file")
+        parent_mtime=$(stat -c %Y "$parent_directory/$file")
+
+        if (( current_mtime > parent_mtime )); then
+            cp "$file" "$parent_directory"
+            echo "Copied $file to $parent_directory"
+        fi
+    else
+        cp "$file" "$parent_directory"
+        echo "Copied $file to $parent_directory"
+    fi
+done
+
